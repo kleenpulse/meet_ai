@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -19,6 +18,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { OctagonAlertIcon } from "lucide-react";
 import Link from "next/link";
+import { FaGoogle, FaGithub } from "react-icons/fa";
 import { useRouter } from "@bprogress/next/app";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
@@ -50,6 +50,7 @@ export default function SignInView() {
 			{
 				email: data.email,
 				password: data.password,
+				callbackURL: "/",
 			},
 			{
 				onSuccess: () => {
@@ -59,6 +60,23 @@ export default function SignInView() {
 				onError: ({ error }) => {
 					setIsPending(false);
 					setError(error.message || "An error occurred while signing in.");
+				},
+			}
+		);
+	};
+
+	const handleSocialSignIn = async (provider: "github" | "google") => {
+		setError(null);
+		setIsPending(true);
+		await authClient.signIn.social(
+			{ provider },
+			{
+				onError: ({ error }) => {
+					setIsPending(false);
+					setError(
+						error.message ||
+							`An error occurred while signing in with ${provider.toUpperCase()}.`
+					);
 				},
 			}
 		);
@@ -135,10 +153,22 @@ export default function SignInView() {
 								</div>
 
 								<div className="grid grid-cols-2 gap-4">
-									<Button variant="outline" className="w-full" type="button">
+									<Button
+										onClick={() => handleSocialSignIn("google")}
+										variant="outline"
+										className="w-full"
+										type="button"
+									>
+										<FaGoogle />
 										Google
 									</Button>
-									<Button variant="outline" className="w-full" type="button">
+									<Button
+										onClick={() => handleSocialSignIn("github")}
+										variant="outline"
+										className="w-full"
+										type="button"
+									>
+										<FaGithub />
 										Github
 									</Button>
 								</div>
