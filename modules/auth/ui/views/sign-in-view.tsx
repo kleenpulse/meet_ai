@@ -182,7 +182,7 @@ export default function SignInView() {
 						</form>
 					</Form>
 
-					<div className="bg-radial from-green-700 to-green-900 relative hidden md:flex  items-center justify-center  overflow-hidden">
+					<div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex  items-center justify-center  overflow-hidden">
 						<div className="absolute inset-0  size-full bg-whitex bg-[linear-gradient(to_right,#012b22_1px,transparent_1px),linear-gradient(to_bottom,#01221b_1px,transparent_1px)] bg-[size:7px_7px] opacity-20" />
 						<div className="flex flex-col gap-y-4 items-center justify-center z-10">
 							<img src="/logo.svg" alt="logo" className="size-[92px] invert" />
