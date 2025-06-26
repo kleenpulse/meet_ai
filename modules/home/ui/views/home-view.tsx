@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
-import React from "react";
+import { useTRPC } from "@/app/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function HomeView() {
+	const trpc = useTRPC();
+	const { data } = useQuery(trpc.hello.queryOptions({ text: "world" }));
+
 	return (
-		<div>
-			<Button onClick={() => authClient.signOut()} className="w-full">
-				Sign out
-			</Button>
+		<div className="flex flex-col gap-4 p-4">
+			<p>{data?.greeting}</p>
 		</div>
 	);
 }

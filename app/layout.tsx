@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import ProvidersLayout from "./providers";
+import { TRPCReactProvider } from "./trpc/client";
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -23,10 +24,14 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body className={`${inter.className} ${geistMono.variable} antialiased`}>
-				<ProvidersLayout>{children}</ProvidersLayout>
-			</body>
-		</html>
+		<TRPCReactProvider>
+			<html lang="en">
+				<body
+					className={`${inter.className} ${geistMono.variable} antialiased`}
+				>
+					<ProvidersLayout>{children}</ProvidersLayout>
+				</body>
+			</html>
+		</TRPCReactProvider>
 	);
 }
