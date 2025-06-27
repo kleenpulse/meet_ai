@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import ProvidersLayout from "./providers";
-import { TRPCReactProvider } from "./trpc/client";
+import { TRPCReactProvider } from "../trpc/client";
 
 const inter = Inter({
 	subsets: ["latin"],
