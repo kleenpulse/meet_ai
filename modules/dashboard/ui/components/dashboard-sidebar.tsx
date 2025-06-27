@@ -63,7 +63,7 @@ export default function DashboardSidebar() {
 				<Separator className="opacity-10 text-[#5d6b68]" />
 			</div>
 
-			<SidebarContent>
+			<SidebarContent className="relative z-10">
 				<SidebarGroup>
 					<SidebarGroupContent>
 						<SidebarMenu>
@@ -116,7 +116,7 @@ export default function DashboardSidebar() {
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>
-			<SidebarFooter className="text-white">
+			<SidebarFooter className="text-white relative z-10">
 				<DashboardUserButton pathname={pathname} />
 			</SidebarFooter>
 		</Sidebar>
