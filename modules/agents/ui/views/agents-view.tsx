@@ -1,5 +1,4 @@
 "use client";
-import ResponsiveDialog from "@/components/responsive-dialog";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { DataTable } from "../components/data-table";
