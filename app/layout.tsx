@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import ProvidersLayout from "./providers";
 import { TRPCReactProvider } from "../trpc/client";
 import { Toaster } from "@/components/ui/sonner";
+import { NuqsAdapter } from "nuqs/adapters/next";
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -25,15 +26,17 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<TRPCReactProvider>
-			<html lang="en">
-				<body
-					className={`${inter.className} ${geistMono.variable} antialiased`}
-				>
-					<Toaster />
-					<ProvidersLayout>{children}</ProvidersLayout>
-				</body>
-			</html>
-		</TRPCReactProvider>
+		<NuqsAdapter>
+			<TRPCReactProvider>
+				<html lang="en">
+					<body
+						className={`${inter.className} ${geistMono.variable} antialiased`}
+					>
+						<Toaster />
+						<ProvidersLayout>{children}</ProvidersLayout>
+					</body>
+				</html>
+			</TRPCReactProvider>
+		</NuqsAdapter>
 	);
 }

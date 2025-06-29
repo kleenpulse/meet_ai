@@ -9,14 +9,24 @@ import ListHeader from "@/modules/agents/ui/components/list-header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { SearchParams } from "nuqs";
+import { loadSearchParams } from "@/modules/agents/params";
 
-export default async function Agents() {
+interface Props {
+	searchParams: Promise<SearchParams>;
+}
+
+export default async function Agents({ searchParams }: Props) {
+	const filters = await loadSearchParams(searchParams);
+
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
 	if (!session) redirect("/sign-in?callbackURL=/agents");
 	const queryClient = getQueryClient();
-	void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions());
+	void queryClient.prefetchQuery(
+		trpc.agents.getMany.queryOptions({ ...filters })
+	);
 
 	return (
 		<>

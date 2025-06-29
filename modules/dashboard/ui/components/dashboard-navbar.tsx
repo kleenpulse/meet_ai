@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { PanelLeftCloseIcon, PanelLeftIcon, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import DashboardCommand from "./dasboard-command";
+import DashboardCommand from "./dashboard-command";
 
 export default function DashboardNavbar() {
 	const { state, toggleSidebar, isMobile } = useSidebar();
@@ -29,7 +29,7 @@ export default function DashboardNavbar() {
 		<>
 			<DashboardCommand open={commandOpen} setOpen={setCommandOpen} />
 			<nav className="flex px-4 gap-x-2 bg-background py-3 items-center border-b">
-				<Button value="outline" className="size-9" onClick={toggleSidebar}>
+				<Button variant="outline" className="size-9" onClick={toggleSidebar}>
 					{state === "collapsed" || isMobile ? (
 						<PanelLeftIcon className="size-4" />
 					) : (
