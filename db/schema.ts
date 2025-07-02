@@ -99,7 +99,7 @@ export const meetings = pgTable("meetings", {
 			onDelete: "cascade",
 		}),
 	status: meetingStatus("status").notNull().default("upcoming"),
-	instructions: text("instructions").notNull(),
+
 	transcriptUrl: text("transcript_url"),
 	recordingUrl: text("recording_url"),
 	summary: text("summary"),

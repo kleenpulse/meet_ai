@@ -1,6 +1,7 @@
 import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
 import { auth } from "@/lib/auth";
+import MeetingsListHeader from "@/modules/meetings/ui/component/meetings-list-header";
 import MeetingsView from "@/modules/meetings/ui/views/meetings-view";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
@@ -19,6 +20,7 @@ export default async function MeetingsPage() {
 
 	return (
 		<>
+			<MeetingsListHeader />
 			<HydrationBoundary state={dehydrate(queryClient)}>
 				<Suspense
 					fallback={
