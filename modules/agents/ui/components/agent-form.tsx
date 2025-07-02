@@ -127,6 +127,7 @@ export default function AgentForm({
 								<Textarea
 									{...field}
 									placeholder="You are a helpful assistant"
+									className="resize-none overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground scrollbar-track-transparent max-h-[300px]"
 								/>
 							</FormControl>
 

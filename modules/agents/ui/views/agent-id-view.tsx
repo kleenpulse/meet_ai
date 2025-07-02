@@ -6,14 +6,13 @@ import {
 	useQueryClient,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useState } from "react";
 import AgentIdViewHeader from "../components/agent-id-view-header";
 import GeneratedAvatar from "@/components/generated-avatar";
 import { Badge } from "@/components/ui/badge";
 import { VideoIcon } from "lucide-react";
 import { useRouter } from "@bprogress/next/app";
 import { toast } from "sonner";
-import { title } from "process";
 import { useConfirm } from "@/hooks/use-confirm";
 import UpdateAgentDialog from "../components/update-agent-dialog";
 

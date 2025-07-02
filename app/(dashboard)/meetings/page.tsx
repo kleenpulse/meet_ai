@@ -1,5 +1,45 @@
-import React from "react";
+import ErrorState from "@/components/error-state";
+import LoadingState from "@/components/loading-state";
+import { auth } from "@/lib/auth";
+import MeetingsView from "@/modules/meetings/ui/views/meetings-view";
+import { getQueryClient, trpc } from "@/trpc/server";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import React, { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
-export default function MeetingsPage() {
-	return <div>MeetingsPage</div>;
+export default async function MeetingsPage() {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+	if (!session) redirect("/sign-in?callbackURL=/meetings");
+	const queryClient = getQueryClient();
+	void queryClient.prefetchQuery(trpc.meetings.getMany.queryOptions({}));
+
+	return (
+		<>
+			<HydrationBoundary state={dehydrate(queryClient)}>
+				<Suspense
+					fallback={
+						<LoadingState
+							title="Loading meetings"
+							description="This may take a few seconds"
+						/>
+					}
+				>
+					<ErrorBoundary
+						fallback={
+							<ErrorState
+								title="Error loading meetings"
+								description="Something went wrong."
+							/>
+						}
+					>
+						<MeetingsView />
+					</ErrorBoundary>
+				</Suspense>
+			</HydrationBoundary>
+		</>
+	);
 }
