@@ -7,7 +7,7 @@ import EmptyState from "@/components/empty-state";
 import { useAgentsFilters } from "../../hooks/use-agents-filters";
 import DataPagination from "../components/data-pagination";
 import { useRouter } from "@bprogress/next/app";
-import { DataTable } from "../components/data-table";
+import { DataTable } from "@/components/data-table";
 
 export default function AgentsView() {
 	const router = useRouter();
