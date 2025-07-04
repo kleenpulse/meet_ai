@@ -12,6 +12,7 @@ import {
 import { TRPCError } from "@trpc/server";
 import { agents, meetings } from "@/db/schema";
 import { meetingsInsertSchema, meetingsUpdateSchema } from "../schemas";
+import { MeetingStatus } from "../types";
 
 export const meetingsRouter = createTRPCRouter({
 	create: protectedProcedure
@@ -86,48 +87,63 @@ export const meetingsRouter = createTRPCRouter({
 					.max(MAX_PAGE_SIZE)
 					.default(DEFAULT_PAGE_SIZE),
 				search: z.string().nullish(),
+				agentId: z.string().nullish(),
+				status: z
+					.enum([
+						MeetingStatus.Upcoming,
+						MeetingStatus.Active,
+						MeetingStatus.Completed,
+						MeetingStatus.Processing,
+						MeetingStatus.Cancelled,
+					])
+					.nullish(),
 			})
 		)
-		.query(async ({ ctx, input: { page, pageSize, search } }) => {
-			const data = await db
-				.select({
-					...getTableColumns(meetings),
-					agent: agents,
-					duration: sql<number>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as(
-						"duration"
-					),
-				})
-				.from(meetings)
-				.innerJoin(agents, eq(meetings.agentId, agents.id))
-				.where(
-					and(
-						eq(meetings.userId, ctx.auth.user.id),
-						search ? ilike(meetings.name, `%${search}%`) : undefined
+		.query(
+			async ({ ctx, input: { page, pageSize, search, status, agentId } }) => {
+				const data = await db
+					.select({
+						...getTableColumns(meetings),
+						agent: agents,
+						duration:
+							sql<number>`EXTRACT(EPOCH FROM (ended_at - started_at))`.as(
+								"duration"
+							),
+					})
+					.from(meetings)
+					.innerJoin(agents, eq(meetings.agentId, agents.id))
+					.where(
+						and(
+							eq(meetings.userId, ctx.auth.user.id),
+							search ? ilike(meetings.name, `%${search}%`) : undefined,
+							status ? eq(meetings.status, status) : undefined,
+							agentId ? eq(meetings.agentId, agentId) : undefined
+						)
 					)
-				)
-				.orderBy(desc(meetings.createdAt), desc(meetings.id))
-				.limit(pageSize)
-				.offset((page - 1) * pageSize);
+					.orderBy(desc(meetings.createdAt), desc(meetings.id))
+					.limit(pageSize)
+					.offset((page - 1) * pageSize);
 
-			const [total] = await db
-				.select({
-					count: count(),
-				})
-				.from(meetings)
-				.innerJoin(agents, eq(meetings.agentId, agents.id))
-				.where(
-					and(
-						eq(meetings.userId, ctx.auth.user.id),
-						search ? ilike(meetings.name, `%${search}%`) : undefined
-					)
-				);
+				const [total] = await db
+					.select({
+						count: count(),
+					})
+					.from(meetings)
+					.innerJoin(agents, eq(meetings.agentId, agents.id))
+					.where(
+						and(
+							eq(meetings.userId, ctx.auth.user.id),
+							search ? ilike(meetings.name, `%${search}%`) : undefined
+						)
+					);
 
-			const totalPages = Math.ceil(total.count / pageSize);
+				const totalPages = Math.ceil(total.count / pageSize);
 
-			return {
-				items: data,
-				total: total.count,
-				totalPages,
-			};
-		}),
+				return {
+					items: data,
+					total: total.count,
+					totalPages,
+				};
+			}
+		),
 });
