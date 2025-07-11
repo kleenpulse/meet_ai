@@ -12,6 +12,10 @@ import { toast } from "sonner";
 import { useConfirm } from "@/hooks/use-confirm";
 import UpdateMeetingDialog from "../component/update-meeting-dialog";
 import { useState } from "react";
+import UpcomingState from "../component/upcoming-state";
+import ActiveState from "../component/active-state";
+import CancelledState from "../component/cancelled-state";
+import ProcessingState from "../component/processing-state";
 
 interface Props {
 	meetingId: string;
@@ -44,11 +48,17 @@ export default function MeetingIdView({ meetingId }: Props) {
 		description: `The following action will remove ${data.name} meeting, This action cannot be undone.`,
 	});
 
-	const handleRemoveAgent = async () => {
+	const handleRemoveMeeting = async () => {
 		const ok = await confirmRemove();
 		if (!ok) return;
 		await removeMeeting.mutateAsync({ id: meetingId });
 	};
+
+	const isActive = data?.status === "active";
+	const isUpcoming = data?.status === "upcoming";
+	const isCancelled = data?.status === "cancelled";
+	const isCompleted = data?.status === "completed";
+	const isProcessing = data?.status === "processing";
 
 	return (
 		<>
@@ -63,9 +73,20 @@ export default function MeetingIdView({ meetingId }: Props) {
 					meetingId={meetingId}
 					meetingName={data?.name}
 					onEdit={() => setUpdateMeetingDialogOpen(true)}
-					onRemove={() => handleRemoveAgent()}
+					onRemove={() => handleRemoveMeeting()}
 				/>
-				{data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+				{isCancelled && <CancelledState />}
+				{isCompleted && <div>[Completed]</div>}
+				{isProcessing && <ProcessingState />}
+
+				{isActive && <ActiveState meetingId={meetingId} />}
+				{isUpcoming && (
+					<UpcomingState
+						meetingId={meetingId}
+						onCancelMeeting={handleRemoveMeeting}
+						isCancelling={false}
+					/>
+				)}
 			</div>
 		</>
 	);
